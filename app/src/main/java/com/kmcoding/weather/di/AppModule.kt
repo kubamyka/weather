@@ -1,6 +1,8 @@
 package com.kmcoding.weather.di
 
 import com.kmcoding.weather.data.remote.WeatherApi
+import com.kmcoding.weather.data.repository.WeatherRepositoryImpl
+import com.kmcoding.weather.domain.repository.WeatherRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,7 +37,7 @@ object AppModule {
     ): Retrofit =
         Retrofit
             .Builder()
-            .baseUrl("")
+            .baseUrl("http://api.weatherapi.com/")
             .client(okHttpClient)
             .addConverterFactory(gsonConverterFactory)
             .build()
@@ -43,4 +45,8 @@ object AppModule {
     @Provides
     @Singleton
     fun provideWeatherApi(retrofit: Retrofit): WeatherApi = retrofit.create(WeatherApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideWeatherRepository(api: WeatherApi): WeatherRepository = WeatherRepositoryImpl(api)
 }

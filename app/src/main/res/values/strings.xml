@@ -1,3 +1,8 @@
 <resources>
   <string name="app_name">Weather</string>
+
+  <string name="menu_search">Search</string>
+  <string name="menu_history">History</string>
+
+  <string name="error_download_locations">Download locations error</string>
 </resources>
