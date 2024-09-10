@@ -9,10 +9,12 @@ class WeatherRepositoryImpl
     @Inject
     constructor(
         private val api: WeatherApi,
+        private val weatherApiKey: String,
+        private val weatherLang: String,
     ) : WeatherRepository {
-        override suspend fun getLocations() =
+        override suspend fun getLocations(query: String) =
             flow {
-                emit(api.getLocations())
+                emit(api.getLocations(query = query, weatherApiKey = weatherApiKey, weatherLang = weatherLang))
             }
 
         override suspend fun getCurrentWeather() =

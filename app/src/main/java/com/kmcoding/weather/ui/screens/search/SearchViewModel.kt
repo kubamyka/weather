@@ -54,7 +54,7 @@ class SearchViewModel
             _searchQuery.update { query }
         }
 
-        fun updateSelectedLocation(location: Location) {
+        fun updateSelectedLocation(location: Location?) {
             _selectedLocation.update { location }
         }
 
@@ -66,21 +66,27 @@ class SearchViewModel
             setLoading(true)
             viewModelScope.launch {
                 weatherRepository
-                    .getLocations()
+                    .getLocations(_searchQuery.value)
                     .catch { error ->
                         setLoading(false)
-                        sendErrorMessage(error)
+                        sendSnackBarError(error)
                     }.map { list ->
                         list.sortedBy { it.name }
                     }.collect { list ->
                         setLoading(false)
                         updateLocations(list)
-                        updateSelectedLocation(_selectedLocation.value ?: list.first())
+
+                        if (list.isEmpty()) {
+                            sendSnackBarMessage(R.string.error_locations_not_found)
+                            updateSelectedLocation(null)
+                        } else {
+                            updateSelectedLocation(_selectedLocation.value ?: list.first())
+                        }
                     }
             }
         }
 
-        private suspend fun sendErrorMessage(error: Throwable) {
+        private suspend fun sendSnackBarError(error: Throwable) {
             val message = error.localizedMessage
             val uiText =
                 if (message == null) {
@@ -89,5 +95,9 @@ class SearchViewModel
                     UiText.DynamicString(message)
                 }
             _snackBarChannel.send(uiText)
+        }
+
+        private suspend fun sendSnackBarMessage(message: Int) {
+            _snackBarChannel.send(UiText.StringResource(message))
         }
     }

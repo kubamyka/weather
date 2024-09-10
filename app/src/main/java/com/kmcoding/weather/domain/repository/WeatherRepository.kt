@@ -5,7 +5,7 @@ import com.kmcoding.weather.domain.model.Location
 import kotlinx.coroutines.flow.Flow
 
 interface WeatherRepository {
-    suspend fun getLocations(): Flow<List<Location>>
+    suspend fun getLocations(query: String): Flow<List<Location>>
 
     suspend fun getCurrentWeather(): Flow<CurrentWeather>
 }

@@ -11,6 +11,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -48,5 +49,21 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideWeatherRepository(api: WeatherApi): WeatherRepository = WeatherRepositoryImpl(api)
+    @Named("weatherApiKey")
+    fun provideWeatherApiKey(): String = "7503b1b2945a4eb8949145904241009"
+
+    @Provides
+    @Singleton
+    @Named("weatherLang")
+    fun provideWeatherLang(): String = "pl"
+
+    @Provides
+    @Singleton
+    fun provideWeatherRepository(
+        api: WeatherApi,
+        @Named("weatherApiKey")
+        apiKey: String,
+        @Named("weatherLang")
+        lang: String,
+    ): WeatherRepository = WeatherRepositoryImpl(api = api, weatherApiKey = apiKey, weatherLang = lang)
 }
