@@ -11,10 +11,16 @@
   <string name="error_query_empty">Search query is empty</string>
   <string name="error_query_does_not_match">Search query can\'t contains numbers or signs</string>
   <string name="error_download_locations">Download locations error</string>
+  <string name="error_download_forecast">Download forecast error</string>
 
   <string name="search_locations">Search locations</string>
   <string name="enter_query_here">Enter query here…</string>
   <string name="clear_history">Clear history</string>
+  <string name="current_weather">Current weather:</string>
+  <string name="weather_whole_day">Weather for the whole day:</string>
+  <string name="wind">Wind: %.1f km/h</string>
+  <string name="humidity">Humidity: %d%%</string>
+  <string name="clouds">Clouds: %d%%</string>
 
   <string name="back">Back</string>
   <string name="close">Close</string>

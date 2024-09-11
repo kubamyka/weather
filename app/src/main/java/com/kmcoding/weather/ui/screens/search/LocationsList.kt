@@ -1,17 +1,13 @@
 package com.kmcoding.weather.ui.screens.search
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
@@ -28,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kmcoding.weather.R
 import com.kmcoding.weather.domain.model.Location
+import com.kmcoding.weather.ui.ContentWithLoader
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
@@ -39,10 +36,9 @@ fun LocationsListPane(
 ) {
     val locations by viewModel.locations.collectAsStateWithLifecycle()
     val isSearchActive by viewModel.isSearchActive.collectAsStateWithLifecycle()
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val query by viewModel.searchQuery.collectAsStateWithLifecycle()
 
-    Box {
+    ContentWithLoader(content = {
         Column(
             modifier = modifier.fillMaxSize(),
         ) {
@@ -77,20 +73,5 @@ fun LocationsListPane(
                 }
             }
         }
-        if (!isLoading) return
-
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .background(color = MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.5f)),
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier.width(48.dp),
-                color = MaterialTheme.colorScheme.secondary,
-                trackColor = MaterialTheme.colorScheme.surfaceVariant,
-            )
-        }
-    }
+    }, viewModel = viewModel)
 }

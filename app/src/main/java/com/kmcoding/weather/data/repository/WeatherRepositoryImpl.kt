@@ -28,8 +28,14 @@ class WeatherRepositoryImpl
             return flow { emit(locations) }
         }
 
-        override suspend fun getCurrentWeather() =
+        override suspend fun getForecast(url: String) =
             flow {
-                emit(api.getCurrentWeather())
+                emit(
+                    api.getForecast(
+                        query = url,
+                        weatherApiKey = weatherApiKey,
+                        weatherLang = weatherLang,
+                    ),
+                )
             }
     }

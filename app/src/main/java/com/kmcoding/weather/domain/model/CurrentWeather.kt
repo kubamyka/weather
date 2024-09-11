@@ -7,9 +7,11 @@ data class CurrentWeather(
     val lastUpdated: String,
     @SerializedName("temp_c")
     val celsiusTemperature: Double,
-    val condition: Condition,
+    val condition: Condition?,
     @SerializedName("wind_kph")
     val windKph: Double,
     val humidity: Int,
     val cloud: Int,
-)
+) {
+    fun getConditionIconUrl(): String = condition?.getIconUrl() ?: ""
+}

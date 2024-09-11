@@ -34,7 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import com.kmcoding.weather.domain.model.Location
-import com.kmcoding.weather.ui.screens.detail.LocationBasePane
+import com.kmcoding.weather.ui.screens.forecast.ForecastBasePane
 import com.kmcoding.weather.ui.screens.history.HistoryListPane
 import com.kmcoding.weather.ui.screens.search.LocationsListPane
 import com.kmcoding.weather.ui.util.ObserveAsEvents
@@ -111,6 +111,7 @@ fun WeatherAppContent(
     val scope = rememberCoroutineScope()
 
     BackHandler(navigator.canNavigateBack()) {
+        onSelectedLocation(null)
         navigator.navigateBack()
     }
 
@@ -164,7 +165,7 @@ fun WeatherAppContent(
             detailPane = {
                 AnimatedPane {
                     if (selectedLocation != null) {
-                        LocationBasePane(
+                        ForecastBasePane(
                             location = selectedLocation,
                             navigateBack = {
                                 onSelectedLocation(null)

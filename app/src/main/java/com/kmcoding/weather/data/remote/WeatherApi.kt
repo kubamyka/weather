@@ -1,6 +1,6 @@
 package com.kmcoding.weather.data.remote
 
-import com.kmcoding.weather.domain.model.CurrentWeather
+import com.kmcoding.weather.domain.model.Forecast
 import com.kmcoding.weather.domain.model.Location
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -16,6 +16,13 @@ interface WeatherApi {
         weatherLang: String,
     ): List<Location>
 
-    @GET("v1/current.json")
-    suspend fun getCurrentWeather(): CurrentWeather
+    @GET("v1/forecast.json")
+    suspend fun getForecast(
+        @Query("q")
+        query: String,
+        @Query("key")
+        weatherApiKey: String,
+        @Query("lang")
+        weatherLang: String,
+    ): Forecast
 }

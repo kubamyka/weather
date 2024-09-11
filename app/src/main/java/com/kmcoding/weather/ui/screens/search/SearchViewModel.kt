@@ -1,13 +1,11 @@
 package com.kmcoding.weather.ui.screens.search
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kmcoding.weather.R
 import com.kmcoding.weather.domain.model.Location
 import com.kmcoding.weather.domain.model.UiText
 import com.kmcoding.weather.domain.repository.WeatherRepository
-import com.kmcoding.weather.ui.util.SnackBarController
-import com.kmcoding.weather.ui.util.SnackBarEvent
+import com.kmcoding.weather.ui.screens.LoaderViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,10 +20,7 @@ class SearchViewModel
     @Inject
     constructor(
         private val weatherRepository: WeatherRepository,
-    ) : ViewModel() {
-        private val _isLoading = MutableStateFlow(false)
-        val isLoading = _isLoading.asStateFlow()
-
+    ) : LoaderViewModel() {
         private val _isSearchActive = MutableStateFlow(false)
         val isSearchActive = _isSearchActive.asStateFlow()
 
@@ -34,10 +29,6 @@ class SearchViewModel
 
         private val _locations = MutableStateFlow<List<Location>>(listOf())
         val locations = _locations.asStateFlow()
-
-        private fun setLoading(loading: Boolean) {
-            _isLoading.update { loading }
-        }
 
         fun toggleSearchActive() {
             updateQuery("")
@@ -74,7 +65,7 @@ class SearchViewModel
                     .getLocations(_searchQuery.value)
                     .catch { error ->
                         setLoading(false)
-                        sendSnackBarError(error)
+                        sendSnackBarError(error, R.string.error_download_locations)
                     }.map { list ->
                         list.sortedBy { it.name }
                     }.collect { list ->
@@ -85,28 +76,6 @@ class SearchViewModel
                             sendSnackBarMessage(UiText.StringResource(R.string.error_locations_not_found))
                         }
                     }
-            }
-        }
-
-        private suspend fun sendSnackBarError(error: Throwable) {
-            val message = error.localizedMessage
-            val uiText =
-                if (message == null) {
-                    UiText.StringResource(R.string.error_download_locations)
-                } else {
-                    UiText.DynamicString(message)
-                }
-            sendSnackBarMessage(uiText)
-        }
-
-        private suspend fun sendSnackBarMessage(uiText: UiText) {
-            viewModelScope.launch {
-                SnackBarController.sendEvent(
-                    event =
-                        SnackBarEvent(
-                            message = uiText,
-                        ),
-                )
             }
         }
     }
