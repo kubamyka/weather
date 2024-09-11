@@ -6,13 +6,13 @@ import com.kmcoding.weather.R
 import com.kmcoding.weather.domain.model.Location
 import com.kmcoding.weather.domain.model.UiText
 import com.kmcoding.weather.domain.repository.WeatherRepository
+import com.kmcoding.weather.ui.util.SnackBarController
+import com.kmcoding.weather.ui.util.SnackBarEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,12 +32,6 @@ class SearchViewModel
         private val _searchQuery = MutableStateFlow("")
         val searchQuery = _searchQuery.asStateFlow()
 
-        private val _selectedLocation = MutableStateFlow<Location?>(null)
-        val selectedLocation = _selectedLocation.asStateFlow()
-
-        private val _snackBarChannel = Channel<UiText>()
-        val snackBarChannel = _snackBarChannel.receiveAsFlow()
-
         private val _locations = MutableStateFlow<List<Location>>(listOf())
         val locations = _locations.asStateFlow()
 
@@ -54,17 +48,28 @@ class SearchViewModel
             _searchQuery.update { query }
         }
 
-        fun updateSelectedLocation(location: Location?) {
-            _selectedLocation.update { location }
-        }
-
         private fun updateLocations(locations: List<Location>) {
             _locations.update { locations }
         }
 
+        private fun isQueryValidate(): Boolean {
+            val regex = Regex("(?<!\\S)\\p{Alpha}+(?!\\S)")
+            return regex.matches(_searchQuery.value)
+        }
+
         fun fetchLocations() {
-            setLoading(true)
             viewModelScope.launch {
+                if (_searchQuery.value.isEmpty()) {
+                    sendSnackBarMessage(UiText.StringResource(R.string.error_query_empty))
+                    return@launch
+                }
+
+                if (!isQueryValidate()) {
+                    sendSnackBarMessage(UiText.StringResource(R.string.error_query_does_not_match))
+                    return@launch
+                }
+
+                setLoading(true)
                 weatherRepository
                     .getLocations(_searchQuery.value)
                     .catch { error ->
@@ -77,10 +82,7 @@ class SearchViewModel
                         updateLocations(list)
 
                         if (list.isEmpty()) {
-                            sendSnackBarMessage(R.string.error_locations_not_found)
-                            updateSelectedLocation(null)
-                        } else {
-                            updateSelectedLocation(_selectedLocation.value ?: list.first())
+                            sendSnackBarMessage(UiText.StringResource(R.string.error_locations_not_found))
                         }
                     }
             }
@@ -94,10 +96,17 @@ class SearchViewModel
                 } else {
                     UiText.DynamicString(message)
                 }
-            _snackBarChannel.send(uiText)
+            sendSnackBarMessage(uiText)
         }
 
-        private suspend fun sendSnackBarMessage(message: Int) {
-            _snackBarChannel.send(UiText.StringResource(message))
+        private suspend fun sendSnackBarMessage(uiText: UiText) {
+            viewModelScope.launch {
+                SnackBarController.sendEvent(
+                    event =
+                        SnackBarEvent(
+                            message = uiText,
+                        ),
+                )
+            }
         }
     }

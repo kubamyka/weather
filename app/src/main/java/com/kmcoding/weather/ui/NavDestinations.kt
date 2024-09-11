@@ -12,6 +12,6 @@ enum class NavDestination(
     val labelRes: Int,
     val icon: ImageVector,
 ) {
-    Search(R.string.menu_search, Icons.Default.Search),
-    History(R.string.menu_history, Icons.Default.Refresh),
+    SEARCH(R.string.menu_search, Icons.Default.Search),
+    HISTORY(R.string.menu_history, Icons.Default.Refresh),
 }

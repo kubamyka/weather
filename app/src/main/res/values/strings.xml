@@ -8,10 +8,13 @@
   <string name="empty_history">No history results to display</string>
 
   <string name="error_locations_not_found">Locations not found for entered query</string>
+  <string name="error_query_empty">Search query is empty</string>
+  <string name="error_query_does_not_match">Search query can\'t contains numbers or signs</string>
   <string name="error_download_locations">Download locations error</string>
 
   <string name="search_locations">Search locations</string>
-  <string name="enter_phrase_here">Enter phrase here…</string>
+  <string name="enter_query_here">Enter query here…</string>
+  <string name="clear_history">Clear history</string>
 
   <string name="back">Back</string>
   <string name="close">Close</string>

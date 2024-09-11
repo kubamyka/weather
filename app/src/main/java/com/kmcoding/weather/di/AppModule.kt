@@ -1,11 +1,16 @@
 package com.kmcoding.weather.di
 
+import android.content.Context
+import androidx.room.Room
+import com.kmcoding.weather.data.db.AppDatabase
+import com.kmcoding.weather.data.db.LocationDao
 import com.kmcoding.weather.data.remote.WeatherApi
 import com.kmcoding.weather.data.repository.WeatherRepositoryImpl
 import com.kmcoding.weather.domain.repository.WeatherRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -57,13 +62,35 @@ object AppModule {
     @Named("weatherLang")
     fun provideWeatherLang(): String = "pl"
 
+    @Singleton
+    @Provides
+    fun provideAppDatabase(
+        @ApplicationContext
+        context: Context,
+    ): AppDatabase =
+        Room
+            .databaseBuilder(context, AppDatabase::class.java, "app_database")
+            .fallbackToDestructiveMigration()
+            .build()
+
+    @Singleton
+    @Provides
+    fun provideLocationDao(appDatabase: AppDatabase): LocationDao = appDatabase.locationDao()
+
     @Provides
     @Singleton
     fun provideWeatherRepository(
+        locationDao: LocationDao,
         api: WeatherApi,
         @Named("weatherApiKey")
         apiKey: String,
         @Named("weatherLang")
         lang: String,
-    ): WeatherRepository = WeatherRepositoryImpl(api = api, weatherApiKey = apiKey, weatherLang = lang)
+    ): WeatherRepository =
+        WeatherRepositoryImpl(
+            locationDao = locationDao,
+            api = api,
+            weatherApiKey = apiKey,
+            weatherLang = lang,
+        )
 }

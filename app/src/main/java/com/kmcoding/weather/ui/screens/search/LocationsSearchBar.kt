@@ -22,6 +22,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -48,9 +49,9 @@ fun LocationsSearchBar(
             Modifier
                 .height(56.dp)
                 .fillMaxWidth()
+                .clip(shape = RoundedCornerShape(24.dp))
                 .background(
                     color = MaterialTheme.colorScheme.primaryContainer,
-                    shape = RoundedCornerShape(24.dp),
                 ).clickable(enabled = true) {
                     toggleSearchActive()
                 },
@@ -60,7 +61,7 @@ fun LocationsSearchBar(
                 value = query,
                 placeholder = {
                     Text(
-                        text = stringResource(id = R.string.enter_phrase_here),
+                        text = stringResource(id = R.string.enter_query_here),
                         fontSize = 18.sp,
                         color = MaterialTheme.colorScheme.onSecondary,
                     )
@@ -88,11 +89,11 @@ fun LocationsSearchBar(
                 keyboardOptions =
                     KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Done,
+                        imeAction = ImeAction.Search,
                     ),
                 keyboardActions =
                     KeyboardActions(
-                        onDone = {
+                        onSearch = {
                             keyboardController?.hide()
                             onQuerySearch()
                         },

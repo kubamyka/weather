@@ -83,4 +83,10 @@ dependencies {
     implementation(libs.material3.adaptive.layout)
     implementation(libs.material3.adaptive.nav.suite)
     implementation(libs.material3.adaptive.navigation)
+
+    implementation(libs.coil)
+    implementation(libs.room.runtime)
+    annotationProcessor(libs.room.compiler)
+    kapt(libs.room.compiler)
+    implementation(libs.room.ktx)
 }
