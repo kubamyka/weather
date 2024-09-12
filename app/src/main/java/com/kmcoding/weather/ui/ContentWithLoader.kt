@@ -16,11 +16,12 @@ import com.kmcoding.weather.ui.screens.LoaderViewModel
 
 @Composable
 fun ContentWithLoader(
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit = {},
     viewModel: LoaderViewModel,
 ) {
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
-    Box {
+    Box(modifier = modifier) {
         content()
 
         if (!isLoading) return

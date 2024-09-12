@@ -90,4 +90,6 @@ dependencies {
     annotationProcessor(libs.room.compiler)
     kapt(libs.room.compiler)
     implementation(libs.room.ktx)
+
+    implementation(libs.splashscreen)
 }

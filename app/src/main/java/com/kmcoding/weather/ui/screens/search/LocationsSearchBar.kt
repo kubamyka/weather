@@ -36,6 +36,7 @@ import com.kmcoding.weather.R
 @Composable
 fun LocationsSearchBar(
     query: String,
+    modifier: Modifier = Modifier,
     onQueryChange: (String) -> Unit,
     onQuerySearch: () -> Unit,
     isSearchActive: Boolean = false,
@@ -46,7 +47,7 @@ fun LocationsSearchBar(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier =
-            Modifier
+            modifier
                 .height(56.dp)
                 .fillMaxWidth()
                 .clip(shape = RoundedCornerShape(24.dp))

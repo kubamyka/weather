@@ -182,6 +182,7 @@ fun WeatherAppContent(
                                 onSelectedLocation(null)
                                 navigator.navigateBack()
                             },
+                            modifier = Modifier.fillMaxSize(),
                         )
                     } else {
                         Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {

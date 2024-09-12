@@ -10,8 +10,8 @@ import androidx.compose.ui.text.TextStyle
 @Composable
 fun TemperatureText(
     value: Double,
-    style: TextStyle = MaterialTheme.typography.headlineMedium,
     modifier: Modifier = Modifier,
+    style: TextStyle = MaterialTheme.typography.headlineMedium,
 ) {
     val color =
         when {

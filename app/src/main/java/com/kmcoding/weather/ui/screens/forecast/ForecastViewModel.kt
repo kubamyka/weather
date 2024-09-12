@@ -28,7 +28,7 @@ class ForecastViewModel
             _showRetry.update { showRetry }
         }
 
-        private fun updateForecast(forecast: Forecast) {
+        fun updateForecast(forecast: Forecast?) {
             _forecast.update { forecast }
         }
 

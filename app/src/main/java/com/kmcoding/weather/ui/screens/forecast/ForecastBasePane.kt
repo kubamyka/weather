@@ -1,6 +1,5 @@
 package com.kmcoding.weather.ui.screens.forecast
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -47,6 +46,7 @@ import com.kmcoding.weather.ui.ContentWithLoader
 fun ForecastBasePane(
     location: Location,
     navigateBack: () -> Unit,
+    modifier: Modifier = Modifier,
     viewModel: ForecastViewModel = hiltViewModel(),
 ) {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
@@ -59,11 +59,12 @@ fun ForecastBasePane(
     if (lastId != location.id) {
         lastId = location.id
         LaunchedEffect(key1 = location.id) {
+            viewModel.updateForecast(null)
             viewModel.fetchForecast(location)
         }
     }
 
-    ContentWithLoader(viewModel = viewModel, content = {
+    ContentWithLoader(modifier = modifier, viewModel = viewModel, content = {
         Scaffold(topBar = {
             TopAppBar(
                 colors =
@@ -93,9 +94,9 @@ fun ForecastBasePane(
             Column(
                 modifier =
                     Modifier
-                        .padding(innerPadding)
+                        .verticalScroll(rememberScrollState())
                         .fillMaxSize()
-                        .verticalScroll(rememberScrollState()),
+                        .padding(innerPadding),
             ) {
                 val currentWeather = forecast?.current
                 if (currentWeather != null) {
@@ -113,25 +114,20 @@ fun ForecastBasePane(
                         forecastHours = forecastHours,
                     )
                 }
-
-                if (showRetry) {
-                    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                        Column(
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.fillMaxSize(),
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.error_forecast_not_fetched),
-                                modifier = Modifier.padding(horizontal = 48.dp, vertical = 16.dp),
-                                textAlign = TextAlign.Center,
-                            )
-                            Button(onClick = {
-                                viewModel.setShowRetry(false)
-                                viewModel.fetchForecast(location)
-                            }) {
-                                Text(text = stringResource(id = R.string.retry))
-                            }
+            }
+            if (showRetry) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = stringResource(id = R.string.error_forecast_not_fetched),
+                            modifier = Modifier.padding(horizontal = 48.dp, vertical = 16.dp),
+                            textAlign = TextAlign.Center,
+                        )
+                        Button(onClick = {
+                            viewModel.setShowRetry(false)
+                            viewModel.fetchForecast(location)
+                        }) {
+                            Text(text = stringResource(id = R.string.retry))
                         }
                     }
                 }
@@ -141,12 +137,15 @@ fun ForecastBasePane(
 }
 
 @Composable
-fun HeadText(text: String) {
+fun HeadText(
+    text: String,
+    modifier: Modifier = Modifier,
+) {
     Column {
         Text(
             text = text,
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp),
         )
         HorizontalDivider(color = Color.Gray.copy(alpha = 0.2f), thickness = 1.dp)
     }

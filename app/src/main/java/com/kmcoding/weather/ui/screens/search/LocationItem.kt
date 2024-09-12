@@ -63,8 +63,8 @@ fun LocationItem(
 }
 
 @Composable
-fun LocationContent(location: Location) {
-    Column(modifier = Modifier.padding(12.dp), horizontalAlignment = Alignment.Start) {
+fun LocationContent(location: Location, modifier : Modifier = Modifier) {
+    Column(modifier = modifier.padding(12.dp), horizontalAlignment = Alignment.Start) {
         Text(text = location.name, style = MaterialTheme.typography.titleLarge)
         Text(
             text = location.country,

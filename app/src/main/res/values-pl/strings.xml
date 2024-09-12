@@ -1,0 +1,32 @@
+<resources>
+  <string name="app_name">Pogoda</string>
+
+  <string name="menu_search">Szukaj</string>
+  <string name="menu_history">Historia</string>
+
+  <string name="empty_locations">Brak lokalizacji do wyświetlenia, wprowadź lokalizację</string>
+  <string name="empty_history">Brak wyników historii do wyświetlenia</string>
+  <string name="empty_forecast">Brak prognozy do wyświetlenia, wybierz lokalizację</string>
+
+  <string name="error_locations_not_found">Nie znaleziono lokalizacji dla wprowadzonego zapytania</string>
+  <string name="error_query_empty">Zapytanie wyszukiwania jest puste</string>
+  <string name="error_query_does_not_match">Zapytanie wyszukiwania nie może zawierać cyfr ani znaków</string>
+  <string name="error_download_locations">Błąd pobierania lokalizacji</string>
+  <string name="error_download_forecast">Błąd pobierania prognozy pogody</string>
+  <string name="error_forecast_not_fetched">Nie można było pobrać prognozy pogody, spróbuj ponownie</string>
+  <string name="error_unknown">Błąd pobierania danych</string>
+
+  <string name="search_locations">Szukaj lokalizacji</string>
+  <string name="enter_query_here">Wprowadź nazwę tutaj…</string>
+  <string name="clear_history">Wyczyść historię</string>
+  <string name="current_weather">Aktualna pogoda:</string>
+  <string name="weather_whole_day">Pogoda na cały dzień:</string>
+  <string name="wind">Wiatr: %.1f km/h</string>
+  <string name="humidity">Wilgotność: %d%%</string>
+  <string name="clouds">Chmury: %d%%</string>
+
+  <string name="back">Wstecz</string>
+  <string name="close">Zamknij</string>
+  <string name="search">Szukaj</string>
+  <string name="retry">Ponów</string>
+</resources>

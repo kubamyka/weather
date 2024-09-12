@@ -1,9 +1,7 @@
 package com.kmcoding.weather.ui.screens.forecast
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -30,7 +28,7 @@ fun ForecastNextHoursDetails(
     modifier: Modifier = Modifier,
     forecastHours: List<ForecastHour> = listOf(),
 ) {
-    LazyRow{
+    LazyRow(modifier = modifier) {
         items(key = { hour ->
             hour.timestamp
         }, items = forecastHours) {
@@ -40,11 +38,14 @@ fun ForecastNextHoursDetails(
 }
 
 @Composable
-fun ForecastHourItem(hour: ForecastHour) {
+fun ForecastHourItem(
+    modifier: Modifier = Modifier,
+    hour: ForecastHour,
+) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         modifier =
-            Modifier
+            modifier
                 .wrapContentHeight(align = Alignment.Top)
                 .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 16.dp),
     ) {
