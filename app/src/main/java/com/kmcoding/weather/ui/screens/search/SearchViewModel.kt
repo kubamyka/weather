@@ -41,7 +41,7 @@ class SearchViewModel
             _locations.update { locations }
         }
 
-        private fun isQueryValidate(): Boolean {
+        fun isQueryValidate(): Boolean {
             val regex = Regex("(?<!\\S)\\p{Alpha}+(?!\\S)")
             return regex.matches(_searchQuery.value)
         }
