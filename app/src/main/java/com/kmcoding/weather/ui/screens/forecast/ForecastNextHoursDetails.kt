@@ -46,7 +46,7 @@ fun ForecastHourItem(hour: ForecastHour) {
         modifier =
             Modifier
                 .wrapContentHeight(align = Alignment.Top)
-                .padding(8.dp),
+                .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 16.dp),
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

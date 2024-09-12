@@ -1,6 +1,5 @@
 package com.kmcoding.weather.ui.screens.search
 
-import androidx.lifecycle.viewModelScope
 import com.kmcoding.weather.R
 import com.kmcoding.weather.domain.model.Location
 import com.kmcoding.weather.domain.model.UiText
@@ -12,7 +11,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,18 +47,17 @@ class SearchViewModel
         }
 
         fun fetchLocations() {
-            viewModelScope.launch {
+            launchDataLoad {
                 if (_searchQuery.value.isEmpty()) {
                     sendSnackBarMessage(UiText.StringResource(R.string.error_query_empty))
-                    return@launch
+                    return@launchDataLoad
                 }
 
                 if (!isQueryValidate()) {
                     sendSnackBarMessage(UiText.StringResource(R.string.error_query_does_not_match))
-                    return@launch
+                    return@launchDataLoad
                 }
 
-                setLoading(true)
                 weatherRepository
                     .getLocations(_searchQuery.value)
                     .catch { error ->

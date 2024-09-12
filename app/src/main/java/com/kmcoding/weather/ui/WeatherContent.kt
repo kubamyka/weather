@@ -1,6 +1,8 @@
 package com.kmcoding.weather.ui
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -26,13 +28,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import androidx.window.core.layout.WindowWidthSizeClass
+import com.kmcoding.weather.R
 import com.kmcoding.weather.domain.model.Location
 import com.kmcoding.weather.ui.screens.forecast.ForecastBasePane
 import com.kmcoding.weather.ui.screens.history.HistoryListPane
@@ -50,16 +56,21 @@ fun WeatherApp() {
 
 @Composable
 private fun WeatherNavigationWrapperUI() {
-    var selectedDestination: NavDestination by remember { mutableStateOf(NavDestination.SEARCH) }
-    var selectedLocation by remember { mutableStateOf<Location?>(null) }
+    var selectedLocation by rememberSaveable { mutableStateOf<Location?>(null) }
+    var selectedDestination: NavDestination by rememberSaveable {
+        mutableStateOf(NavDestination.SEARCH)
+    }
 
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    val isExpanded = windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED
     val windowSize =
         with(LocalDensity.current) {
             currentWindowSize().toSize().toDpSize()
         }
+
     val navLayoutType =
         when {
-            selectedLocation != null -> NavigationSuiteType.None
+            selectedLocation != null && !isExpanded -> NavigationSuiteType.None
             windowSize.width >= WINDOW_WIDTH_LARGE -> NavigationSuiteType.NavigationDrawer
             else -> NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfo())
         }
@@ -172,6 +183,13 @@ fun WeatherAppContent(
                                 navigator.navigateBack()
                             },
                         )
+                    } else {
+                        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                            Text(
+                                text = stringResource(id = R.string.empty_forecast),
+                                modifier = Modifier.padding(32.dp),
+                            )
+                        }
                     }
                 }
             },

@@ -1,10 +1,15 @@
 package com.kmcoding.weather.ui.screens.forecast
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -18,9 +23,14 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,9 +52,15 @@ fun ForecastBasePane(
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     val showNavigationIcon = windowSizeClass.windowWidthSizeClass != WindowWidthSizeClass.EXPANDED
 
+    val showRetry by viewModel.showRetry.collectAsStateWithLifecycle()
     val forecast by viewModel.forecast.collectAsStateWithLifecycle()
-    LaunchedEffect(key1 = location) {
-        viewModel.fetchForecast(location)
+    var lastId: Int? by rememberSaveable { mutableStateOf(null) }
+
+    if (lastId != location.id) {
+        lastId = location.id
+        LaunchedEffect(key1 = location.id) {
+            viewModel.fetchForecast(location)
+        }
     }
 
     ContentWithLoader(viewModel = viewModel, content = {
@@ -75,7 +91,11 @@ fun ForecastBasePane(
             )
         }) { innerPadding ->
             Column(
-                modifier = Modifier.padding(top = innerPadding.calculateTopPadding()).fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .padding(innerPadding)
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState()),
             ) {
                 val currentWeather = forecast?.current
                 if (currentWeather != null) {
@@ -92,6 +112,28 @@ fun ForecastBasePane(
                     ForecastNextHoursDetails(
                         forecastHours = forecastHours,
                     )
+                }
+
+                if (showRetry) {
+                    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.fillMaxSize(),
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.error_forecast_not_fetched),
+                                modifier = Modifier.padding(horizontal = 48.dp, vertical = 16.dp),
+                                textAlign = TextAlign.Center,
+                            )
+                            Button(onClick = {
+                                viewModel.setShowRetry(false)
+                                viewModel.fetchForecast(location)
+                            }) {
+                                Text(text = stringResource(id = R.string.retry))
+                            }
+                        }
+                    }
                 }
             }
         }

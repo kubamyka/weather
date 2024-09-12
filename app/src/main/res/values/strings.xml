@@ -6,12 +6,15 @@
 
   <string name="empty_locations">No locations to display, please enter some query</string>
   <string name="empty_history">No history results to display</string>
+  <string name="empty_forecast">No forecast to display, please pick some location</string>
 
   <string name="error_locations_not_found">Locations not found for entered query</string>
   <string name="error_query_empty">Search query is empty</string>
   <string name="error_query_does_not_match">Search query can\'t contains numbers or signs</string>
   <string name="error_download_locations">Download locations error</string>
   <string name="error_download_forecast">Download forecast error</string>
+  <string name="error_forecast_not_fetched">Forecast could not be fetched, please retry</string>
+  <string name="error_unknown">Unknown download data error</string>
 
   <string name="search_locations">Search locations</string>
   <string name="enter_query_here">Enter query here…</string>
@@ -25,4 +28,5 @@
   <string name="back">Back</string>
   <string name="close">Close</string>
   <string name="search">Search</string>
+  <string name="retry">Retry</string>
 </resources>

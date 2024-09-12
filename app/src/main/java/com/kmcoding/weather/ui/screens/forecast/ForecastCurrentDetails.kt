@@ -1,10 +1,8 @@
 package com.kmcoding.weather.ui.screens.forecast
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -33,16 +31,17 @@ fun ForecastCurrentDetails(
 ) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        modifier = modifier
-            .fillMaxWidth()
-            .wrapContentHeight(align = Alignment.Top)
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .wrapContentHeight(align = Alignment.Top)
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 32.dp),
     ) {
-        Column(modifier = Modifier.fillMaxWidth().background(color = MaterialTheme.colorScheme.onPrimary)){
+        Column(modifier = Modifier.fillMaxWidth().background(color = MaterialTheme.colorScheme.onPrimary)) {
             Text(
                 text = currentWeather.condition?.text ?: "",
                 style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp)
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 AsyncImage(
@@ -50,9 +49,10 @@ fun ForecastCurrentDetails(
                     error = painterResource(id = R.drawable.ic_no_photo),
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth,
-                    modifier = Modifier
-                        .size(128.dp)
-                        .padding(end = 16.dp),
+                    modifier =
+                        Modifier
+                            .size(128.dp)
+                            .padding(end = 16.dp),
                 )
                 Column {
                     TemperatureText(value = currentWeather.celsiusTemperature)
