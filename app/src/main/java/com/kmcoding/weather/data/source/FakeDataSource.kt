@@ -15,10 +15,13 @@ object FakeDataSource {
             Location(id = 2, name = "Nowy Sącz", country = "Poland", url = "nowy-sacz-poland", 1726045674),
             Location(id = 3, name = "Kielce", country = "Poland", url = "kielce-poland", 1726045682),
         )
-    val fakeConditions =
+    private val fakeConditions =
         listOf(
             Condition(text = "Słonecznie", icon = "//cdn.weatherapi.com/weather/64x64/day/113.png"),
-            Condition(text = "Częściowe zachmurzenie", icon = "//cdn.weatherapi.com/weather/64x64/day/116.png"),
+            Condition(
+                text = "Częściowe zachmurzenie",
+                icon = "//cdn.weatherapi.com/weather/64x64/day/116.png",
+            ),
             Condition(text = "Zamglenie", icon = "//cdn.weatherapi.com/weather/64x64/night/143.png"),
         )
 
@@ -135,6 +138,11 @@ object FakeDataSource {
             ),
         )
 
-    val fakeForecastObj = ForecastObj(date = "2024-09-11", timestamp = 1725995929, hours = fakeHours)
-    val fakeForecast = Forecast(current = fakeWeathers[0], forecast = ForecastResponse(forecastObj = listOf(fakeForecastObj)))
+    private val fakeForecastObj =
+        ForecastObj(date = "2024-09-11", timestamp = 1725995929, hours = fakeHours)
+    val fakeForecast =
+        Forecast(
+            current = fakeWeathers[0],
+            forecast = ForecastResponse(forecastObj = listOf(fakeForecastObj)),
+        )
 }

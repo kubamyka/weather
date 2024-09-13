@@ -1,6 +1,7 @@
 package com.kmcoding.weather
 
 import com.kmcoding.weather.data.source.FakeDataSource.fakeLocations
+import com.kmcoding.weather.fake.FakeWeatherRepositoryImpl
 import com.kmcoding.weather.ui.screens.search.SearchViewModel
 import com.kmcoding.weather.util.MainDispatcherRule
 import kotlinx.coroutines.launch

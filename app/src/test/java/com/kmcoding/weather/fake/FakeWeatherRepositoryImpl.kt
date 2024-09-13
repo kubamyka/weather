@@ -1,4 +1,4 @@
-package com.kmcoding.weather
+package com.kmcoding.weather.fake
 
 import com.kmcoding.weather.data.source.FakeDataSource.fakeForecast
 import com.kmcoding.weather.data.source.FakeDataSource.fakeLocations

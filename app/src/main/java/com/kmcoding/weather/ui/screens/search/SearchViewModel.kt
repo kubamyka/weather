@@ -41,6 +41,9 @@ class SearchViewModel
             _locations.update { locations }
         }
 
+        /**
+         * Regular expression to check if query does not contains numbers or signs
+         */
         fun isQueryValidate(): Boolean {
             val regex = Regex("(?<!\\S)\\p{Alpha}+(?!\\S)")
             return regex.matches(_searchQuery.value)
