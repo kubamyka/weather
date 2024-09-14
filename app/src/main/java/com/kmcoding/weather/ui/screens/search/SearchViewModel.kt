@@ -42,7 +42,7 @@ class SearchViewModel
         }
 
         /**
-         * Regular expression to check if query does not contains numbers or signs
+         * Regular expression to check if query does not contains numbers or signs.
          */
         fun isQueryValidate(): Boolean {
             val regex = Regex("(?<!\\S)\\p{Alpha}+(?!\\S)")
@@ -53,6 +53,11 @@ class SearchViewModel
             launchDataLoad {
                 if (_searchQuery.value.isEmpty()) {
                     sendSnackBarMessage(UiText.StringResource(R.string.error_query_empty))
+                    return@launchDataLoad
+                }
+
+                if (_searchQuery.value.length < 3) {
+                    sendSnackBarMessage(UiText.StringResource(R.string.error_query_min_length))
                     return@launchDataLoad
                 }
 

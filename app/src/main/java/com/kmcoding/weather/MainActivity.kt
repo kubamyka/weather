@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.material3.adaptive.currentWindowSize
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.toSize
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.kmcoding.weather.ui.WeatherApp
 import com.kmcoding.weather.ui.theme.WeatherTheme
@@ -17,7 +20,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             WeatherTheme {
-                WeatherApp()
+                val windowSize =
+                    with(LocalDensity.current) {
+                        currentWindowSize().toSize().toDpSize()
+                    }
+                WeatherApp(windowSize = windowSize)
             }
         }
     }

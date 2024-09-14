@@ -11,6 +11,7 @@
   <string name="error_locations_not_found">Locations not found for entered query</string>
   <string name="error_query_empty">Search query is empty</string>
   <string name="error_query_does_not_match">Search query can\'t contains numbers or signs</string>
+  <string name="error_query_min_length">Search query should have at least 3 letters</string>
   <string name="error_download_locations">Download locations error</string>
   <string name="error_download_forecast">Download forecast error</string>
   <string name="error_forecast_not_fetched">Forecast could not be fetched, please retry</string>

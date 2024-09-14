@@ -2,6 +2,7 @@ package com.kmcoding.weather.di
 
 import android.content.Context
 import androidx.room.Room
+import com.kmcoding.weather.BuildConfig
 import com.kmcoding.weather.data.db.AppDatabase
 import com.kmcoding.weather.data.db.LocationDao
 import com.kmcoding.weather.data.remote.WeatherApi
@@ -55,7 +56,7 @@ object AppModule {
     @Provides
     @Singleton
     @Named("weatherApiKey")
-    fun provideWeatherApiKey(): String = "7503b1b2945a4eb8949145904241009"
+    fun provideWeatherApiKey(): String = BuildConfig.API_KEY
 
     @Provides
     @Singleton

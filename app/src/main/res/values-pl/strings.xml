@@ -11,6 +11,7 @@
   <string name="error_locations_not_found">Nie znaleziono lokalizacji dla wprowadzonego zapytania</string>
   <string name="error_query_empty">Zapytanie wyszukiwania jest puste</string>
   <string name="error_query_does_not_match">Zapytanie wyszukiwania nie może zawierać cyfr ani znaków</string>
+  <string name="error_query_min_length">Zapytanie wyszukiwania powinno zawierać co najmniej 3 litery</string>
   <string name="error_download_locations">Błąd pobierania lokalizacji</string>
   <string name="error_download_forecast">Błąd pobierania prognozy pogody</string>
   <string name="error_forecast_not_fetched">Nie można było pobrać prognozy pogody, spróbuj ponownie</string>

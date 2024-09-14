@@ -33,6 +33,7 @@ class ForecastViewModel
         }
 
         fun fetchForecast(location: Location) {
+            setShowRetry(false)
             launchDataLoad {
                 weatherRepository
                     .getForecast(location.url)

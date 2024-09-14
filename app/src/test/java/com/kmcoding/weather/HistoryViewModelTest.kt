@@ -24,11 +24,11 @@ class HistoryViewModelTest {
     }
 
     @Test
-    fun `verify history locations list size after load`() =
+    fun `verify history locations list after load`() =
         runTest {
             backgroundScope.launch(mainDispatcherRule.testDispatcher) {
                 viewModel.locations.collect()
             }
-            assertEquals(fakeLocations.size, viewModel.locations.value.size)
+            assertEquals(fakeLocations, viewModel.locations.value)
         }
 }

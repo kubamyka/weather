@@ -16,6 +16,11 @@ open class LoaderViewModel : BaseViewModel() {
         _isLoading.update { loading }
     }
 
+    /**
+     * Launching data download from viewModelScope with loader and possible snackBarError.
+     * @param block suspend function to fetch data from api
+     * @return [Job] representing the outcome coroutine job
+     */
     protected fun launchDataLoad(block: suspend () -> Unit): Job =
         viewModelScope.launch {
             try {

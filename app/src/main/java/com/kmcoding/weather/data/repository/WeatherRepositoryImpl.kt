@@ -21,9 +21,11 @@ class WeatherRepositoryImpl
         override suspend fun getLocations(query: String): Flow<List<Location>> {
             val locations =
                 api.getLocations(query = query, weatherApiKey = weatherApiKey, weatherLang = weatherLang)
+
             locations.forEach {
                 it.apply { timestamp = System.currentTimeMillis() }
             }
+
             withContext(Dispatchers.IO) { locationDao.insertAll(locations) }
             return flow { emit(locations) }
         }

@@ -81,4 +81,14 @@ class SearchViewModelTest {
             }
             assertEquals(0, viewModel.locations.value.size)
         }
+
+    @Test
+    fun `verify if locations list is empty with too short query`() =
+        runTest {
+            viewModel.updateQuery("te")
+            backgroundScope.launch(mainDispatcherRule.testDispatcher) {
+                viewModel.fetchLocations()
+            }
+            assertEquals(0, viewModel.locations.value.size)
+        }
 }

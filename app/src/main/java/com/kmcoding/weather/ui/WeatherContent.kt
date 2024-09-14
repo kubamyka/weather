@@ -14,8 +14,8 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.adaptive.currentWindowSize
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
@@ -33,10 +33,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.toSize
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.kmcoding.weather.R
 import com.kmcoding.weather.domain.model.Location
@@ -50,29 +51,24 @@ import kotlinx.coroutines.launch
 private val WINDOW_WIDTH_LARGE = 1200.dp
 
 @Composable
-fun WeatherApp() {
-    WeatherNavigationWrapperUI()
-}
-
-@Composable
-private fun WeatherNavigationWrapperUI() {
+fun WeatherApp(
+    windowSize: DpSize,
+    currentWindowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
+) {
     var selectedLocation by rememberSaveable { mutableStateOf<Location?>(null) }
     var selectedDestination: NavDestination by rememberSaveable {
         mutableStateOf(NavDestination.SEARCH)
     }
 
-    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-    val isExpanded = windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED
-    val windowSize =
-        with(LocalDensity.current) {
-            currentWindowSize().toSize().toDpSize()
-        }
+    val windowWidthSizeClass = currentWindowAdaptiveInfo.windowSizeClass.windowWidthSizeClass
+    val isExpanded = windowWidthSizeClass == WindowWidthSizeClass.EXPANDED
+    val isLargeWidth = windowSize.width >= WINDOW_WIDTH_LARGE
 
     val navLayoutType =
         when {
             selectedLocation != null && !isExpanded -> NavigationSuiteType.None
-            windowSize.width >= WINDOW_WIDTH_LARGE -> NavigationSuiteType.NavigationDrawer
-            else -> NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfo())
+            isLargeWidth -> NavigationSuiteType.NavigationDrawer
+            else -> NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfo)
         }
 
     val myNavigationSuiteItemColors =
@@ -105,6 +101,7 @@ private fun WeatherNavigationWrapperUI() {
             selectedLocation = selectedLocation,
             onSelectedLocation = { location -> selectedLocation = location },
             selectedDestination = selectedDestination,
+            listWidth = if (isLargeWidth) windowSize.width / 3 else windowSize.width / 2,
         )
     }
 }
@@ -115,6 +112,7 @@ fun WeatherAppContent(
     selectedLocation: Location?,
     onSelectedLocation: (Location?) -> Unit,
     selectedDestination: NavDestination,
+    listWidth: Dp,
 ) {
     val navigator = rememberListDetailPaneScaffoldNavigator<Long>()
     val context = LocalContext.current
@@ -153,7 +151,7 @@ fun WeatherAppContent(
             directive = navigator.scaffoldDirective,
             value = navigator.scaffoldValue,
             listPane = {
-                AnimatedPane {
+                AnimatedPane(modifier = Modifier.preferredWidth(listWidth)) {
                     when (selectedDestination) {
                         NavDestination.SEARCH -> {
                             LocationsListPane(
@@ -189,6 +187,7 @@ fun WeatherAppContent(
                             Text(
                                 text = stringResource(id = R.string.empty_forecast),
                                 modifier = Modifier.padding(32.dp),
+                                textAlign = TextAlign.Center,
                             )
                         }
                     }
