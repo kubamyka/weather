@@ -7,9 +7,7 @@ import com.kmcoding.weather.data.db.AppDatabase
 import com.kmcoding.weather.data.db.LocationDao
 import com.kmcoding.weather.data.source.FakeDataSource.fakeLocations
 import com.kmcoding.weather.domain.model.Location
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -18,7 +16,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.concurrent.CountDownLatch
 
 @RunWith(AndroidJUnit4::class)
 class LocationDaoTest {
@@ -39,46 +36,32 @@ class LocationDaoTest {
     }
 
     @After
+    @Throws(Exception::class)
     fun closeDatabase() {
         database.close()
     }
 
     @Test
+    @Throws(Exception::class)
     fun insertLocation_success() =
         runBlocking {
             locationDao.insert(fakeLocations[0])
-
-            val latch = CountDownLatch(1)
-            val job =
-                async(Dispatchers.IO) {
-                    locationDao.getHistoryLocations().collect { result ->
-                        assertTrue(result.contains(fakeLocations[0]))
-                        latch.countDown()
-                    }
-                }
-            latch.await()
-            job.cancelAndJoin()
+            val result = locationDao.getHistoryLocations().first()
+            assertTrue(result.contains(fakeLocations[0]))
         }
 
     @Test
+    @Throws(Exception::class)
     fun deleteLocation_success() =
         runBlocking {
             locationDao.insert(fakeLocations[0])
             locationDao.delete(fakeLocations[0])
-
-            val latch = CountDownLatch(1)
-            val job =
-                async(Dispatchers.IO) {
-                    locationDao.getHistoryLocations().collect { result ->
-                        assertFalse(result.contains(fakeLocations[0]))
-                        latch.countDown()
-                    }
-                }
-            latch.await()
-            job.cancelAndJoin()
+            val result = locationDao.getHistoryLocations().first()
+            assertFalse(result.contains(fakeLocations[0]))
         }
 
     @Test
+    @Throws(Exception::class)
     fun updateLocation_success() =
         runBlocking {
             locationDao.insert(fakeLocations[0])
@@ -87,50 +70,26 @@ class LocationDaoTest {
                 Location(id = 1, name = "Poznań", country = "Poland", url = "poznan-poland", 1725995923)
             locationDao.update(updatedLocation)
 
-            val latch = CountDownLatch(1)
-            val job =
-                async(Dispatchers.IO) {
-                    locationDao.getLocation(updatedLocation.id).collect { result ->
-                        assertEquals(result.name, updatedLocation.name)
-                        latch.countDown()
-                    }
-                }
-            latch.await()
-            job.cancelAndJoin()
+            val result = locationDao.getLocation(updatedLocation.id).first()
+            assertEquals(result.name, updatedLocation.name)
         }
 
     @Test
+    @Throws(Exception::class)
     fun insertAllLocations_success() =
         runBlocking {
             locationDao.insertAll(fakeLocations)
-
-            val latch = CountDownLatch(1)
-            val job =
-                async(Dispatchers.IO) {
-                    locationDao.getHistoryLocations().collect { result ->
-                        assertEquals(result.size, fakeLocations.size)
-                        latch.countDown()
-                    }
-                }
-            latch.await()
-            job.cancelAndJoin()
+            val result = locationDao.getHistoryLocations().first()
+            assertEquals(result.size, fakeLocations.size)
         }
 
     @Test
+    @Throws(Exception::class)
     fun deleteAllLocations_success() =
         runBlocking {
             locationDao.insertAll(fakeLocations)
             locationDao.deleteAllLocations()
-
-            val latch = CountDownLatch(1)
-            val job =
-                async(Dispatchers.IO) {
-                    locationDao.getHistoryLocations().collect { result ->
-                        assertEquals(result.size, 0)
-                        latch.countDown()
-                    }
-                }
-            latch.await()
-            job.cancelAndJoin()
+            val result = locationDao.getHistoryLocations().first()
+            assertEquals(result.size, 0)
         }
 }
